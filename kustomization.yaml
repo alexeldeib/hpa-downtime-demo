@@ -1,0 +1,11 @@
+bases:
+- manifest.yaml
+
+patchesJson6902:
+- path: patch-add-replicas.json
+  target:
+    group: apps
+    kind: Deployment
+    name: hpa-demo
+    version: v1
+    namespace: hpa-demo

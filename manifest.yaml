@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &name hpa-demo
+  namespace: *name
+  labels:
+    app: *name
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: *name
+  template:
+    metadata:
+      labels:
+        app: *name
+    spec:
+      containers:
+      - name: demo
+        imagePullPolicy: "Always"
+        image: ubuntu:20.04
+        command: ["sleep", "infinity"]
+        args: []
+        env: []
+        readinessProbe:
+          failureThreshold: 0
+          exec:
+            command:
+            - echo
+            - healthy
+          initialDelaySeconds: 3
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+      terminationGracePeriodSeconds: 1
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: &name hpa-demo
+  namespace: *name
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: *name
+  minReplicas: 2
+  maxReplicas: 2
+---

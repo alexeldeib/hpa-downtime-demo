@@ -1,0 +1,12 @@
+[
+    {
+        "op": "replace",
+        "path": "/metadata/annotations/force-deploy-marker",
+        "value": "$TAG"
+    },
+    {
+        "op": "replace",
+        "path": "/spec/template/metadata/annotations",
+        "value": { "force-deploy-marker": "$TAG" }
+    }
+]
